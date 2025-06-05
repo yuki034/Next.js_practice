@@ -4,6 +4,8 @@ import Link from 'next/link';
 import { lusitana } from '@/app/ui/fonts';
 import Image from  'next/image';
 import styles from '@/app/ui/home.module.css';
+import { Metadata } from 'next';
+
 export default function Page() {
   return (
     <main className="flex min-h-screen flex-col p-6">
@@ -48,3 +50,6 @@ export default function Page() {
     </main>
   );
 }
+export const metadata: Metadata ={
+  title:'Invoice',
+};

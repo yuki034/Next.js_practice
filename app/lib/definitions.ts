@@ -17,13 +17,13 @@ export type Customer = {
 };
 
 export type Invoice = {
-  id: string;
+  id: string; //データベースで作成されます
   customer_id: string;
-  amount: number;
+  amount: number; //セントで保存されます
+  status:'pending' | 'paid';
   date: string;
-  // In TypeScript, this is called a string union type.
-  // It means that the "status" property can only be one of the two strings: 'pending' or 'paid'.
-  status: 'pending' | 'paid';
+  // TypeScriptでは、これは文字列結合型と呼ばれます。
+  // "status"プロパティは、'pending'または'paid'のいずれかの文字列になることができます。
 };
 
 export type Revenue = {
@@ -39,7 +39,7 @@ export type LatestInvoice = {
   amount: string;
 };
 
-// The database returns a number for amount, but we later format it to a string with the formatCurrency function
+// データベースは金額を数値で返しますが、formatCurrency関数で文字列にフォーマットします
 export type LatestInvoiceRaw = Omit<LatestInvoice, 'amount'> & {
   amount: number;
 };
