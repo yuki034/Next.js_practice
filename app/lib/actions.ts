@@ -64,9 +64,10 @@ try{
   `;
 } catch (error) {
 // データベースエラーが発生した場合、より具体的なエラーを返します。
+console.error('Error create invoice:', error);
 return {
   message: 'Database Error: Failed to Create Invoice.',
-};
+  };
 }
   // インボイスページのキャッシュを再検証し、ユーザーをリダイレクトします。
 revalidatePath('/dashboard/invoices');
@@ -100,7 +101,7 @@ try{
       WHERE id = ${id}
       `;
     } catch (error) {
-      console.log(error);
+      console.error('Error updating invoice:', error);
       return { message: 'Database Error: Failed to Update Invoice.' };
   }
 
