@@ -3,7 +3,7 @@ import { authConfig } from './auth.config';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import type { User } from '@/app/lib/definitions';
-import bcryptjs from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import postgres from 'postgres';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
@@ -31,7 +31,7 @@ export const { auth, signIn, signOut } = NextAuth({
             const { email, password } = parsedCredentials.data;
             const user = await getUser(email);
             if (!user) return null;
-            const passwordsMatch = await bcryptjs.compare(password, user.password);//ハッシュ化されたパスワードを比較します
+            const passwordsMatch = await bcrypt.compare(password, user.password);//ハッシュ化されたパスワードを比較します
 
             if (passwordsMatch) return user;
             }
