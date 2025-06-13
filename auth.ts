@@ -6,6 +6,8 @@ import type { User } from '@/app/lib/definitions';
 import bcrypt from 'bcrypt';
 import postgres from 'postgres';
 
+console.log('Checking AUTH_SECRET in auth.ts:', process.env.AUTH_SECRET);
+
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
 async function getUser(email: string): Promise<User | undefined> {
@@ -33,15 +35,23 @@ export const { auth, signIn, signOut } = NextAuth({
             console.log('Validation successful for email:', email); // 2. バリデーション成功を確認
 
             const user = await getUser(email);
-            if (!user)return null;
+            if (!user){
+              return null;
+            }
+            console.log('User found in database:', user.email); // 4. ユーザーが見つかった場合
             const passwordsMatch = await bcrypt.compare(password, user.password);//ハッシュ化されたパスワードを比較します
 
-            if (passwordsMatch) return user;
+            if (passwordsMatch) {
+              console.log('Password match for user:', user.email); // 5. パスワードが一致した場合
+              return user;
+            }else {
+              console.log('Password mismatch for user:', user.email); // 6. パスワードが不一致の場合
+              return null;
             }
-
-            console.log('Invalid credentials');
+          }
+          console.log('Invalid credentials format (zod validation failed)'); // 7. バリデーションに失敗した場合
           return null;
-        },
-      }),
-    ],
-  });
+      },
+    }),
+  ],
+});
