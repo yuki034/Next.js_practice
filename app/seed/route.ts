@@ -12,6 +12,7 @@ async function seedUsers(tx: postgres.Sql) {
       name VARCHAR(255) NOT NULL,
       email TEXT NOT NULL UNIQUE,
       password TEXT NOT NULL
+      is_admin BOOLEAN NOT NULL DEFAULT FALSE
     );
   `;
 
@@ -19,8 +20,8 @@ async function seedUsers(tx: postgres.Sql) {
     users.map(async (user) => {
       const hashedPassword = await bcrypt.hash(user.password, 10);
       return tx`
-        INSERT INTO users (id, name, email, password)
-        VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword})
+        INSERT INTO users (id, name, email, password ,is_adomin)
+        VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword},${user.is_admin})
         ON CONFLICT (id) DO NOTHING;
       `;
     }),
