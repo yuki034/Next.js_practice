@@ -1,4 +1,4 @@
-import postgres from 'postgres';
+import postgres, { PostgresError } from 'postgres';
 import { NextResponse } from 'next/server';
 
 // 【重要】
@@ -15,7 +15,6 @@ export async function GET() {
   try {
     console.log('Altering table "users" to add "is_admin" column...');
     
-    // usersテーブルにis_adminカラムを追加するSQLコマンドを実行
     await sql`
       ALTER TABLE users ADD COLUMN is_admin BOOLEAN NOT NULL DEFAULT FALSE;
     `;
@@ -24,9 +23,9 @@ export async function GET() {
     
     return NextResponse.json({ message: 'usersテーブルの更新に成功しました。is_adminカラムが追加されました。' });
 
-  } catch (error: any) {
-    // もしカラムが既に存在している場合は、エラーではなく成功メッセージを返す
-    if (error.code === '42701') { // 42701は「duplicate_column」のエラーコード
+  } catch (error) {
+    // エラーがPostgresErrorのインスタンスで、かつコードが「duplicate_column」かチェック
+    if (error instanceof PostgresError && error.code === '42701') {
       console.log('Column "is_admin" already exists.');
       return NextResponse.json({ message: 'is_adminカラムは既に存在します。' });
     }
