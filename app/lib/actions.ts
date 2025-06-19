@@ -1,11 +1,11 @@
 'use server';
 
-import { z } from 'zod';
+import { any, z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import postgres from 'postgres';
 import { signIn } from '@/auth';
-import { AuthError } from 'next-auth';
+
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
@@ -125,14 +125,11 @@ export async function authenticate(
   try {
     await signIn('credentials', formData);
   } catch (error) {
-    if (error instanceof AuthError) {
-      switch (error.type) {
-        case 'CredentialsSignin':
-          return 'Invalid credentials.';
-        default:
-          return 'Something went wrong.';
-      }
+    // error.nameでエラーの種類を判定する
+    if ((error as Error).name === 'CredentialsSignin') {
+      return 'Invalid credentials.';
     }
+    // 他の予期せぬエラーはそのままスローする
     throw error;
   }
 }
