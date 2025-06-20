@@ -20,7 +20,7 @@ async function getUser(email: string): Promise<User | undefined> {
   }
 }
 
-export const { auth, signIn, signOut } = NextAuth({
+export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
@@ -38,6 +38,7 @@ export const { auth, signIn, signOut } = NextAuth({
             const passwordsMatch = await bcrypt.compare(password, user.password);//ハッシュ化されたパスワードを比較します
 
             if (passwordsMatch) {
+              console.log('ログイン成功ユーザー:', user);
               return user;
             }else {
               return null;

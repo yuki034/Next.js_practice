@@ -1,9 +1,10 @@
 import { Metadata } from 'next';
+import { auth } from '@/auth';
 
-export default function Page() {
-    return <p>Users Page
-    ここはadminだけが閲覧可能なページです</p>;
+export default async function Page() {
+    const session = await auth();//現在のユーザーのセッション情報を取得
 }
+
 export const metadata:Metadata = {
     title: 'customer',
 };

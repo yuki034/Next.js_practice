@@ -8,9 +8,10 @@ import {
         import { Suspense } from 'react';
         import { RevenueChartSkeleton } from '@/app/ui/skeletons';
         import { LatestInvoicesSkeleton } from '@/app/ui/skeletons';
-
+import { auth } from '@/auth';
 
 export default async function Page() {
+  const session = await auth();
   const {
         numberOfInvoices,
         numberOfCustomers,
@@ -19,6 +20,9 @@ export default async function Page() {
         } = await fetchCardData();
     return (
     <main>
+      {session?.user?.name && (
+        <div className="mb-2 text-lg">ようこそ{session.user.name}さん</div>
+      )}
       <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
         Dashboard
       </h1>
