@@ -1,5 +1,9 @@
 import { Metadata } from 'next';
 
-export const metadata:Metadata = {
+export default function Page() {
+  return <div>Usersページ</div>;
+}
+
+export const metadata: Metadata = {
     title: 'customer',
 };
