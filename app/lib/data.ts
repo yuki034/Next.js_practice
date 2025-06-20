@@ -6,6 +6,7 @@ import {
   InvoicesTable,
   LatestInvoiceRaw,
   Revenue,
+  User,
 } from './definitions';
 import { formatCurrency } from './utils';
 
@@ -169,6 +170,23 @@ export async function fetchInvoiceById(id: string) {
   }
 }
 
+export async function fetchUsers(){
+  try {
+    const users = await sql<User[]>`
+  SELECT
+    id,
+    name,
+    email,
+    is_admin
+  FROM users
+`;
+    return users;
+  }catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch all users.');
+  }
+
+}
 export async function fetchCustomers() {
   try {
     const customers = await sql<CustomerField[]>`
