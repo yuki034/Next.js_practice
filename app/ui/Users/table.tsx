@@ -1,4 +1,5 @@
 import { User } from '@/app/lib/definitions';
+import { UpdateUsers, DeleteUsers } from '@/app/ui/Users/buttons';
 
 export default function UsersTable({ users }: { users: User[] }) {
     return (
@@ -8,8 +9,8 @@ export default function UsersTable({ users }: { users: User[] }) {
             <table className="min-w-full text-gray-900 md:table">
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
-                <th className="px-4 py-5 font-medium sm:pl-6">名前</th>
-                <th className="px-3 py-5 font-medium">メールアドレス</th>
+                <th className="px-4 py-5 font-medium sm:pl-6">Name</th>
+                <th className="px-3 py-5 font-medium">E-mail</th>
               </tr>
             </thead>
             <tbody className="bg-white">
@@ -23,6 +24,10 @@ export default function UsersTable({ users }: { users: User[] }) {
                 </td>
                 <td className="whitespace-nowrap px-3 py-3">
                     {user.email}
+                </td>
+                <td className="whitespace-nowrap px-3 py-3 flex gap-10">
+                  <UpdateUsers id={user.id} />
+                  <DeleteUsers id={user.id} />
                 </td>
                 </tr>
             ))}

@@ -88,3 +88,7 @@ export type InvoiceForm = {
   amount: number;
   status: 'pending' | 'paid';
 };
+
+export type UserField = {
+ name: string;
+};

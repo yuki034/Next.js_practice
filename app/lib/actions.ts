@@ -1,10 +1,11 @@
 'use server';
 
-import { z } from 'zod';
+import { string, z } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import postgres from 'postgres';
 import { signIn } from '@/auth';
+import { CreateUsers, UpdateUsers } from '../ui/Users/buttons';
 
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
@@ -117,6 +118,16 @@ export async function deleteInvoice(id: string) {
   revalidatePath('/dashboard/invoices');
 }
 
+export async function deleteUsers(id: string) {
+  'use server';
+  try {
+    await sql`DELETE FROM users WHERE id = ${id}`;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to delete user.');
+  }
+}
+
 export async function authenticate(
   prevState: string | undefined,
   formData: FormData,
@@ -132,4 +143,55 @@ export async function authenticate(
     // 他の予期せぬエラーはそのままスローする
     throw error;
   }
+}
+//新しいユーザーを作ってDBに保存します
+export async function createUser(id: string, name: string, email: string, password: string) {
+  'use server';
+  try {
+    await sql`
+      INSERT INTO users (id, name, email, password)
+      VALUES (${id}, ${name}, ${email}, ${password})
+    `;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to create user.');
+  }
+}
+
+export async function updateUsers(
+  id: string,
+  prevState: State,
+  formData: FormData,
+) {
+  const name = formData.get('name') as string;
+  const email = formData.get('email') as string;
+  const password = formData.get('password') as string;
+
+  if (!name || !email) {
+    return {
+      message: 'NameとE-mailは必須です。',
+    };
+  }
+
+  try {
+    if (password) {
+      await sql`
+        UPDATE users
+        SET name = ${name}, email = ${email}, password = ${password}
+        WHERE id = ${id}
+      `;
+    } else {
+      await sql`
+        UPDATE users
+        SET name = ${name}, email = ${email}
+        WHERE id = ${id}
+      `;
+    }
+  } catch (error) {
+    console.error('Error updating user:', error);
+    return { message: 'Database Error: Failed to Update User.' };
+  }
+
+  revalidatePath('/dashboard/Users');
+  redirect('/dashboard/Users');
 }
