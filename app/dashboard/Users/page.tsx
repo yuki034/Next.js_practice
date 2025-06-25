@@ -4,9 +4,9 @@ import { Metadata } from 'next';
 import { fetchUsers } from '@/app/lib/data';
 import UsersTable from '@/app/ui/Users/table';
 import { CreateUsers } from '@/app/ui/Users/buttons';
-import CreateUserForm from '@/app/ui/Users/create-form';
 
-export default async function Page({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) {
+
+export default async function Page({}: { searchParams: { [key: string]: string | string[] | undefined } }) {
   const users = await fetchUsers();
   const Commonusers = users.filter((user: any) => !user.is_admin );
    return (
