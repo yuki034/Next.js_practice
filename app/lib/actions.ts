@@ -152,7 +152,7 @@ export async function createUser(id: string, name: string, email: string, passwo
     console.log('hashedPassword:', hashedPassword);
     await sql`
       INSERT INTO users (id, name, email, password)
-      VALUES (${id}, ${name}, ${email}, ${password})
+      VALUES (${id}, ${name}, ${email}, ${hashedPassword})
     `;
   } catch (error) {
     console.error('Database Error:', error);
