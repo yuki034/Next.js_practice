@@ -6,7 +6,11 @@ import { Metadata } from 'next';
 
 export default async function Page({ params }: { params: { id: string } }) {
     const users = await fetchUsers();
-    const user = users.find(u => u.id === params.id);
+    if (typeof params.id !== 'string') {
+      // エラー処理
+      return <div>不正なIDです</div>;
+    }
+    const user = users.find(u => u.id === String(params.id));
     if (!user) {
         return <div>ユーザーが見つかりません</div>;
       }
