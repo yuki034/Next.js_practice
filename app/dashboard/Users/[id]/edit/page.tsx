@@ -12,8 +12,14 @@ type Props = {
 
 export default async function Page({ params }: Props) {
   const users = await fetchUsers();
-  const user = users.find((u) => u.id === params.id);
-  if (!user) return <div>ユーザーが見つかりません</div>;
+  if (typeof params.id !== 'string') {
+    // エラー処理
+    return <div>不正なIDです</div>;
+  }
+  const user = users.find(u => u.id === params.id);
+  if (!user) {
+    return <div>ユーザーが見つかりません</div>;
+  }
 
   return (
     <main>
@@ -33,5 +39,5 @@ export default async function Page({ params }: Props) {
 }
 
 export const metadata: Metadata = {
-title: 'edit',
+  title: 'edit',
 };
