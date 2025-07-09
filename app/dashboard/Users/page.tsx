@@ -8,7 +8,7 @@ import { CreateUsers } from '@/app/ui/Users/buttons';
 
 export default async function Page({}: { searchParams: { [key: string]: string | string[] | undefined } }) {
   const users = await fetchUsers();
-  const Commonusers = users.filter((user: any) => !user.is_admin );
+  const Commonusers = users.filter((user) => !user.is_admin );
    return (
     <div className="w-full">
       <div className="flex w-full items-center justify-between">
