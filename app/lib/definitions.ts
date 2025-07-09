@@ -90,5 +90,5 @@ export type InvoiceForm = {
 };
 
 export type UserField = {
- name: string;
+  name: string;
 };

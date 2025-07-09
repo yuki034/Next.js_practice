@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import postgres from 'postgres';
 import { signIn } from '@/auth';
+import bcrypt from 'bcryptjs';
 
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
@@ -147,6 +148,7 @@ export async function authenticate(
 export async function createUser(id: string, name: string, email: string, password: string) {
   'use server';
   try {
+    const hashedPassword = await bcrypt.hash(password, 10);
     await sql`
       INSERT INTO users (id, name, email, password)
       VALUES (${id}, ${name}, ${email}, ${password})
@@ -174,9 +176,10 @@ export async function updateUsers(
 
   try {
     if (password) {
+      const hashedPassword = await bcrypt.hash(password, 10);
       await sql`
         UPDATE users
-        SET name = ${name}, email = ${email}, password = ${password}
+        SET name = ${name}, email = ${email}, password = ${hashedPassword}
         WHERE id = ${id}
       `;
     } else {
